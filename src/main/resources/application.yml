@@ -1,0 +1,15 @@
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+
+
+azure:
+  service-bus:
+    meeting:
+      connection-string: "Endpoint=sb://liondance.servicebus.windows.net/;"
+      queue-name: "meeting"
+    test:
+      connection-string: "Endpoint=sb://liondance.servicebus.windows.net/;"
+      queue-name: "azuretest"
