@@ -1,4 +1,9 @@
 spring:
+  jms:
+    servicebus:
+      connection-string: "Endpoint=sb://liondance.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;"
+      topic-client-id: "1387"
+      pricing-tier: "Standard"
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
@@ -8,8 +13,8 @@ spring:
 azure:
   service-bus:
     meeting:
-      connection-string: "Endpoint=sb://liondance.servicebus.windows.net/;"
+      connection-string: "Endpoint=sb://liondance.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;"
       queue-name: "meeting"
     test:
-      connection-string: "Endpoint=sb://liondance.servicebus.windows.net/;"
+      connection-string: "Endpoint=sb://liondance.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;"
       queue-name: "azuretest"

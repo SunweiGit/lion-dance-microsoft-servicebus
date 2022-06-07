@@ -24,6 +24,28 @@ public class ServiceBusSenderClientConfig {
 
     private final ServiceBusTestConfig serviceBusTestConfig;
 
+    @Primary
+    @Qualifier("serviceBusTestSenderClient")
+    @Bean(name = "serviceBusTestSenderClient")
+    public ServiceBusSenderClient serviceBusTestSenderClient() {
+        log.info("receiveMessages init");
+        return new ServiceBusClientBuilder().connectionString(serviceBusTestConfig.getConnectionString()).sender().queueName(serviceBusTestConfig.getQueueName()).topicName(serviceBusTestConfig.getTopicName()).buildClient();
+    }
+
+
+    /**
+     * Lock provider lock provider.
+     *
+     * @return the lock provider
+     */
+    @Qualifier("serviceBusMeetingSenderClient")
+    @Bean(name = "serviceBusMeetingSenderClient")
+    public ServiceBusSenderClient serviceBusMeetingSenderClient() {
+        log.info("receiveMessages init");
+        return new ServiceBusClientBuilder().connectionString(serviceBusMeetingConfig.getConnectionString()).sender().queueName(serviceBusMeetingConfig.getQueueName()).topicName(serviceBusMeetingConfig.getTopicName()).buildClient();
+    }
+
+
     private static void processTestMessage(ServiceBusReceivedMessageContext context) {
         ServiceBusReceivedMessage message = context.getMessage();
         log.error("processTestMessage Processing message. Session: {}, Sequence #: {}. Contents: {}", message.getMessageId(),
@@ -54,7 +76,8 @@ public class ServiceBusSenderClientConfig {
                 // Choosing an arbitrary amount of time to wait until trying again.
                 TimeUnit.SECONDS.sleep(1);
             } catch (InterruptedException e) {
-                System.err.println("Unable to sleep for period of time");
+                log.error("Unable to sleep for period of time");
+                Thread.currentThread().interrupt();
             }
         } else {
             log.error("Error source {}, reason {}, message: {}", context.getErrorSource(),
@@ -92,7 +115,8 @@ public class ServiceBusSenderClientConfig {
                 // Choosing an arbitrary amount of time to wait until trying again.
                 TimeUnit.SECONDS.sleep(1);
             } catch (InterruptedException e) {
-                System.err.println("Unable to sleep for period of time");
+                log.error("Unable to sleep for period of time");
+                Thread.currentThread().interrupt();
             }
         } else {
             log.error("Error source {}, reason {}, message: {}", context.getErrorSource(),
@@ -100,49 +124,20 @@ public class ServiceBusSenderClientConfig {
         }
     }
 
-    @Primary
-    @Qualifier("serviceBusTestSenderClient")
-    @Bean(name = "serviceBusTestSenderClient")
-    public ServiceBusSenderClient serviceBusTestSenderClient() {
-        log.info("receiveMessages init");
-        return new ServiceBusClientBuilder().connectionString(serviceBusTestConfig.getConnectionString()).sender().queueName(serviceBusTestConfig.getQueueName()).topicName(serviceBusTestConfig.getTopicName()).buildClient();
-    }
-
     /**
      * Service bus meeting receive messages.
      */
-    @Bean
-    public void serviceBusTestReceiveMessages() {
-        new ServiceBusClientBuilder().connectionString(serviceBusTestConfig.getConnectionString()).processor().queueName(serviceBusTestConfig.getQueueName()).processMessage(ServiceBusSenderClientConfig::processTestMessage).processError(ServiceBusSenderClientConfig::processTestError).buildProcessorClient().start();
-    }
-
-    /**
-     * Lock provider lock provider.
-     *
-     * @return the lock provider
-     */
-    @Qualifier("serviceBusMeetingSenderClient")
-    @Bean(name = "serviceBusMeetingSenderClient")
-    public ServiceBusSenderClient serviceBusMeetingSenderClient() {
-        log.info("receiveMessages init");
-        return new ServiceBusClientBuilder().connectionString(serviceBusMeetingConfig.getConnectionString()).sender().queueName(serviceBusMeetingConfig.getQueueName()).topicName(serviceBusMeetingConfig.getTopicName()).buildClient();
-    }
-
-    /**
-     * Service bus meeting receive messages.
-     */
-    @Bean
+    // @Bean
     public void serviceBusMeetingReceiveMessages() {
         new ServiceBusClientBuilder().connectionString(serviceBusMeetingConfig.getConnectionString()).processor().queueName(serviceBusMeetingConfig.getQueueName()).processMessage(ServiceBusSenderClientConfig::processMeetingMessage).processError(ServiceBusSenderClientConfig::processMeetingError).buildProcessorClient().start();
     }
 
-    @Bean
-    public void serviceBusMeetingReceiveMessages1() {
-        new ServiceBusClientBuilder().connectionString(serviceBusMeetingConfig.getConnectionString()).processor().queueName(serviceBusMeetingConfig.getQueueName()).processMessage(ServiceBusSenderClientConfig::processMeetingMessage).processError(ServiceBusSenderClientConfig::processMeetingError).buildProcessorClient().start();
+    /**
+     * Service bus meeting receive messages.
+     */
+    //@Bean
+    public void serviceBusTestReceiveMessages() {
+        new ServiceBusClientBuilder().connectionString(serviceBusTestConfig.getConnectionString()).processor().queueName(serviceBusTestConfig.getQueueName()).processMessage(ServiceBusSenderClientConfig::processTestMessage).processError(ServiceBusSenderClientConfig::processTestError).buildProcessorClient().start();
     }
 
-    @Bean
-    public void serviceBusMeetingReceiveMessages2() {
-        new ServiceBusClientBuilder().connectionString(serviceBusMeetingConfig.getConnectionString()).processor().queueName(serviceBusMeetingConfig.getQueueName()).processMessage(ServiceBusSenderClientConfig::processMeetingMessage).processError(ServiceBusSenderClientConfig::processMeetingError).buildProcessorClient().start();
-    }
 }

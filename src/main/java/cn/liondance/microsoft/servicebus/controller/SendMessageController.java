@@ -1,10 +1,11 @@
 package cn.liondance.microsoft.servicebus.controller;
 
-import cn.liondance.microsoft.servicebus.function.ServiceBusSendMessage;
+import cn.liondance.microsoft.servicebus.function.ServiceBusSendMessageFunction;
 import com.azure.messaging.servicebus.ServiceBusMessage;
 import com.azure.messaging.servicebus.ServiceBusSenderClient;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,14 +22,15 @@ import java.util.List;
  * @author sunwei
  */
 @Api(tags = "SendMessage")
+@Slf4j
 @RestController
 @RequestMapping(value = "sendMessage")
 public class SendMessageController {
 
     private final ServiceBusSenderClient senderClient;
 
-
     private final ServiceBusSenderClient serviceBusTestSenderClient;
+
 
     public SendMessageController(@Qualifier("serviceBusMeetingSenderClient") ServiceBusSenderClient senderClient, @Qualifier("serviceBusTestSenderClient") ServiceBusSenderClient serviceBusTestSenderClient) {
         this.senderClient = senderClient;
@@ -41,16 +43,14 @@ public class SendMessageController {
      * @param body the body
      * @return the response entity
      */
-    @ApiOperation(value = "sendMessage")
+
+    @ApiOperation(value = "sendMessage", notes = "尝试给不同的队列发送消息")
     @PostMapping(value = "sendMessage")
     public ResponseEntity<String> sendMessage(String queueName, @RequestBody String body) {
         switch (queueName) {
-            case "meeting":
-                senderClient.sendMessage(new ServiceBusMessage(body));
-                break;
-            case "test":
-                serviceBusTestSenderClient.sendMessage(new ServiceBusMessage(body));
-                break;
+            case "meeting" -> senderClient.sendMessage(new ServiceBusMessage(body));
+            case "test" -> serviceBusTestSenderClient.sendMessage(new ServiceBusMessage(body));
+            default -> log.error("{}", queueName);
         }
         return ResponseEntity.ok("ok");
     }
@@ -64,7 +64,7 @@ public class SendMessageController {
     @ApiOperation(value = "sendMessageBatch")
     @PostMapping(value = "sendMessageBatch")
     public ResponseEntity<String> sendMessageBatch(@RequestBody List<String> body) {
-        ServiceBusSendMessage.sendMessageBatch(senderClient, body);
+        ServiceBusSendMessageFunction.sendMessageBatch(senderClient, body.toArray(String[]::new));
         return ResponseEntity.ok("ok");
     }
 
@@ -79,7 +79,7 @@ public class SendMessageController {
     @ApiOperation(value = "scheduleMessage")
     @PostMapping(value = "scheduleMessage")
     public ResponseEntity<String> scheduleMessage(String offsetDateTime, @RequestBody String body) {
-        ServiceBusSendMessage.scheduleMessage(senderClient, body, offsetDateTime);
+        ServiceBusSendMessageFunction.scheduleMessage(senderClient, body, offsetDateTime);
         return ResponseEntity.ok("ok");
     }
 
@@ -88,7 +88,7 @@ public class SendMessageController {
      *
      * @return the response entity
      */
-    @ApiOperation(value = "close")
+    @ApiOperation(value = "close", notes = "senderClient 一旦close 就不能在做任何操作了")
     @PostMapping(value = "close")
     public ResponseEntity<String> close() {
         senderClient.close();

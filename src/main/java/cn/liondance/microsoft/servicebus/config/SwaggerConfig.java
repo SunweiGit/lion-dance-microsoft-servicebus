@@ -34,56 +34,56 @@ import java.util.Collection;
 @EnableSwagger2
 @EnableOpenApi
 public class SwaggerConfig {
-  private String apiInfoTitle;
-  private String apiInfoVersion;
-  private String apiInfoDescription;
-  private String apiInfoTermsOfServiceUrl;
-  private String apiInfoLicense;
-  private String apiInfoLicenseUrl;
+    private String apiInfoTitle;
+    private String apiInfoVersion;
+    private String apiInfoDescription;
+    private String apiInfoTermsOfServiceUrl;
+    private String apiInfoLicense;
+    private String apiInfoLicenseUrl;
 
-  /**
-   * Create rest api docket.
-   *
-   * @return the docket
-   */
-  @Bean
-  public Docket createRestApi() {
-    return new Docket(DocumentationType.SWAGGER_2)
-            .apiInfo(apiInfo())
-            .select()
-            .apis(RequestHandlerSelectors.any())
-            .paths(PathSelectors.any())
-            .build();
-  }
+    /**
+     * Create rest api docket.
+     *
+     * @return the docket
+     */
+    @Bean
+    public Docket createRestApi() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .apiInfo(apiInfo())
+                .select()
+                .apis(RequestHandlerSelectors.any())
+                .paths(PathSelectors.any())
+                .build();
+    }
 
-  private ApiInfo apiInfo() {
-    return new ApiInfoBuilder()
-            .title(apiInfoTitle)
-            .version(apiInfoVersion)
-            .description(apiInfoDescription)
-            .termsOfServiceUrl(apiInfoTermsOfServiceUrl)
-            .license(apiInfoLicense)
-            .licenseUrl(apiInfoLicenseUrl)
-            .build();
-  }
+    private ApiInfo apiInfo() {
+        return new ApiInfoBuilder()
+                .title(apiInfoTitle)
+                .version(apiInfoVersion)
+                .description(apiInfoDescription)
+                .termsOfServiceUrl(apiInfoTermsOfServiceUrl)
+                .license(apiInfoLicense)
+                .licenseUrl(apiInfoLicenseUrl)
+                .build();
+    }
 
-  /**
-   * 增加如下配置可解决Spring Boot 6.x 与Swagger 3.0.0 不兼容问题
-   **/
-  @Bean
-  public WebMvcEndpointHandlerMapping webEndpointServletHandlerMapping(WebEndpointsSupplier webEndpointsSupplier, ServletEndpointsSupplier servletEndpointsSupplier, ControllerEndpointsSupplier controllerEndpointsSupplier, EndpointMediaTypes endpointMediaTypes, CorsEndpointProperties corsProperties, WebEndpointProperties webEndpointProperties, Environment environment) {
-    ArrayList allEndpoints = new ArrayList();
-    Collection<ExposableWebEndpoint> webEndpoints = webEndpointsSupplier.getEndpoints();
-    allEndpoints.addAll(webEndpoints);
-    allEndpoints.addAll(servletEndpointsSupplier.getEndpoints());
-    allEndpoints.addAll(controllerEndpointsSupplier.getEndpoints());
-    String basePath = webEndpointProperties.getBasePath();
-    EndpointMapping endpointMapping = new EndpointMapping(basePath);
-    boolean shouldRegisterLinksMapping = this.shouldRegisterLinksMapping(webEndpointProperties, environment, basePath);
-    return new WebMvcEndpointHandlerMapping(endpointMapping, webEndpoints, endpointMediaTypes, corsProperties.toCorsConfiguration(), new EndpointLinksResolver(allEndpoints, basePath), shouldRegisterLinksMapping, null);
-  }
+    /**
+     * 增加如下配置可解决Spring Boot 6.x 与Swagger 3.0.0 不兼容问题
+     **/
+    @Bean
+    public WebMvcEndpointHandlerMapping webEndpointServletHandlerMapping(WebEndpointsSupplier webEndpointsSupplier, ServletEndpointsSupplier servletEndpointsSupplier, ControllerEndpointsSupplier controllerEndpointsSupplier, EndpointMediaTypes endpointMediaTypes, CorsEndpointProperties corsProperties, WebEndpointProperties webEndpointProperties, Environment environment) {
+        ArrayList allEndpoints = new ArrayList<>();
+        Collection<ExposableWebEndpoint> webEndpoints = webEndpointsSupplier.getEndpoints();
+        allEndpoints.addAll(webEndpoints);
+        allEndpoints.addAll(servletEndpointsSupplier.getEndpoints());
+        allEndpoints.addAll(controllerEndpointsSupplier.getEndpoints());
+        String basePath = webEndpointProperties.getBasePath();
+        EndpointMapping endpointMapping = new EndpointMapping(basePath);
+        boolean shouldRegisterLinksMapping = this.shouldRegisterLinksMapping(webEndpointProperties, environment, basePath);
+        return new WebMvcEndpointHandlerMapping(endpointMapping, webEndpoints, endpointMediaTypes, corsProperties.toCorsConfiguration(), new EndpointLinksResolver(allEndpoints, basePath), shouldRegisterLinksMapping, null);
+    }
 
-  private boolean shouldRegisterLinksMapping(WebEndpointProperties webEndpointProperties, Environment environment, String basePath) {
-    return webEndpointProperties.getDiscovery().isEnabled() && (StringUtils.hasText(basePath) || ManagementPortType.get(environment).equals(ManagementPortType.DIFFERENT));
-  }
+    private boolean shouldRegisterLinksMapping(WebEndpointProperties webEndpointProperties, Environment environment, String basePath) {
+        return webEndpointProperties.getDiscovery().isEnabled() && (StringUtils.hasText(basePath) || ManagementPortType.get(environment).equals(ManagementPortType.DIFFERENT));
+    }
 }
