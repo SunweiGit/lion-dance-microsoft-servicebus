@@ -71,6 +71,7 @@ public class SendMessageController {
 
     /**
      * Schedule message response entity.
+     * offsetDateTime <now() 消息会立即处理
      *
      * @param offsetDateTime the offset date time
      * @param body           the body
