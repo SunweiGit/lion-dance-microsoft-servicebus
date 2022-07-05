@@ -79,7 +79,7 @@ public class SendMessageController {
      */
     @ApiOperation(value = "scheduleMessage")
     @PostMapping(value = "scheduleMessage")
-    public ResponseEntity<String> scheduleMessage(String offsetDateTime, @RequestBody String body) {
+        public ResponseEntity<String> scheduleMessage(String offsetDateTime, @RequestBody String body) {
         ServiceBusSendMessageFunction.scheduleMessage(senderClient, body, offsetDateTime);
         return ResponseEntity.ok("ok");
     }

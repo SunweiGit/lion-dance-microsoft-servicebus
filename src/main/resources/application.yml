@@ -1,8 +1,8 @@
 spring:
   jms:
     servicebus:
-      connection-string: "Endpoint=sb://liondance.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=4hR5/wTQhrD1Yg2wmyjWdlRquR6DcImJu/GXs+CJMqk="
-      topic-client-id: "1380b3ff-6927-4e54-bd8a-d8c07b2d4c37"
+      connection-string: "Endpoint=sb://liondance0518.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=OStab/7t8pg0aVbh/TlZdSNSo5nkkFmEe9Dzuwa+WT0="
+      topic-client-id: "09324699-18ab-40e7-aa98-655d9dab09c4"
       pricing-tier: "Standard"
   mvc:
     pathmatch:
@@ -13,8 +13,8 @@ spring:
 azure:
   service-bus:
     meeting:
-      connection-string: "Endpoint=sb://liondance.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=4hR5/wTQhrD1Yg2wmyjWdlRquR6DcImJu/GXs+CJMqk="
+      connection-string: "Endpoint=sb://liondance0518.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=OStab/7t8pg0aVbh/TlZdSNSo5nkkFmEe9Dzuwa+WT0="
       queue-name: "meeting"
     test:
-      connection-string: "Endpoint=sb://liondance.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=4hR5/wTQhrD1Yg2wmyjWdlRquR6DcImJu/GXs+CJMqk="
+      connection-string: "Endpoint=sb://liondance0518.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=OStab/7t8pg0aVbh/TlZdSNSo5nkkFmEe9Dzuwa+WT0="
       queue-name: "azuretest"

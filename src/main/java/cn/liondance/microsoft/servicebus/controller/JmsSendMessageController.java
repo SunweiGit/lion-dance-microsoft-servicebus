@@ -4,7 +4,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.activemq.ScheduledMessage;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -53,12 +52,12 @@ public class JmsSendMessageController {
     @ApiOperation(value = "scheduleMessage", notes = "尝试给不同的队列发送消息")
     @PostMapping(value = "scheduleMessage")
     public ResponseEntity<String> scheduleMessage(String queueName, @RequestBody String body) {
-        jmsTemplate.send(queueName, session -> {
+       /* jmsTemplate.send(queueName, session -> {
             TextMessage textMessage = session.createTextMessage(body);
             textMessage.setLongProperty(ScheduledMessage.AMQ_SCHEDULED_DELAY, 2 * 60 * 1000);
             textMessage.setLongProperty(ScheduledMessage.AMQ_SCHEDULED_REPEAT, 1);
             return textMessage;
-        });
+        });*/
         return ResponseEntity.ok("ok");
     }
 

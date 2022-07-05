@@ -14,9 +14,9 @@ import java.util.function.Consumer;
  * @author sunwei
  */
 @Slf4j
-public class ServiceBusReceiveMessageFunction {
+public class GetServiceBusProcessorClientFunction {
 
-    private ServiceBusReceiveMessageFunction() {
+    private GetServiceBusProcessorClientFunction() {
         throw new IllegalStateException("Utility class");
     }
 

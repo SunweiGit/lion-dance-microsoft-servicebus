@@ -1,6 +1,6 @@
 package cn.liondance.microsoft.servicebus.config;
 
-import cn.liondance.microsoft.servicebus.function.ServiceBusReceiveMessageFunction;
+import cn.liondance.microsoft.servicebus.function.GetServiceBusProcessorClientFunction;
 import com.azure.messaging.servicebus.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -95,7 +95,7 @@ public class ServiceBusReceiveClientConfig {
      */
     @Bean
     public void serviceBusMeetingReceiveMessages() {
-        ServiceBusReceiveMessageFunction.getServiceBusProcessorClient(serviceBusMeetingConfig.getConnectionString(), serviceBusMeetingConfig.getQueueName(), ServiceBusReceiveClientConfig::processMeetingMessage, ServiceBusReceiveClientConfig::processMeetingError).start();
+        GetServiceBusProcessorClientFunction.getServiceBusProcessorClient(serviceBusMeetingConfig.getConnectionString(), serviceBusMeetingConfig.getQueueName(), ServiceBusReceiveClientConfig::processMeetingMessage, ServiceBusReceiveClientConfig::processMeetingError).start();
     }
 
     /**
@@ -103,7 +103,7 @@ public class ServiceBusReceiveClientConfig {
      */
     @Bean
     public void serviceBusTestReceiveMessages() {
-        ServiceBusReceiveMessageFunction.getServiceBusProcessorClient(serviceBusTestConfig.getConnectionString(), serviceBusTestConfig.getQueueName(), ServiceBusReceiveClientConfig::processTestMessage, ServiceBusReceiveClientConfig::processTestError).start();
+        GetServiceBusProcessorClientFunction.getServiceBusProcessorClient(serviceBusTestConfig.getConnectionString(), serviceBusTestConfig.getQueueName(), ServiceBusReceiveClientConfig::processTestMessage, ServiceBusReceiveClientConfig::processTestError).start();
     }
 
 }
